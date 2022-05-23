@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace EnderPi.SystemE
 {
@@ -19,11 +19,9 @@ namespace EnderPi.SystemE
         {
             using (var ms = new MemoryStream())
             {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, obj);
-                ms.Position = 0;
-
-                return (T)formatter.Deserialize(ms);
+                JsonSerializerOptions jsonOptions = new JsonSerializerOptions();
+                var json = JsonSerializer.Serialize(obj, jsonOptions);
+                return (T)JsonSerializer.Deserialize(json, obj.GetType(), jsonOptions);
             }
         }
     }
